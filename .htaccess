@@ -1,0 +1,31 @@
+<?php
+// Fichier .htaccess pour activer la réécriture d'URL et sécuriser l'API
+# Activer le moteur de réécriture
+RewriteEngine On
+
+# Rediriger toutes les requêtes vers HTTPS (optionnel, recommandé en production)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Autoriser les requêtes OPTIONS pour CORS
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Protéger les fichiers sensibles
+<FilesMatch "^(config\.php|database\.sql)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Désactiver l'affichage des erreurs PHP en production
+php_flag display_errors Off
+php_flag display_startup_errors Off
+
+# Limiter la taille des uploads
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+
+# Protection contre les injections
+php_flag magic_quotes_gpc Off
+php_flag register_globals Off
+?>
